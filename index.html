@@ -41,8 +41,7 @@
             }
         },
         personagem = {
-            x: 50,
-            y: 0,
+            x: 50, y: 0,
             altura: 50,
             largura: 50,
             cor: "#ff4e4e",
@@ -50,7 +49,6 @@
             velocidade: 10,
             forcaDoPulo: 20,
             qntPulos: 0,
-
             andaFrente: function() {
                 if ( this.x <= (LARGURA - this.largura - 30) ) {
                     this.x = this.x + 5;
@@ -76,8 +74,22 @@
                     this.qntPulos++;
                 }
             },
-
             desenha: function() {
+                ctx.fillStyle = this.cor;
+                ctx.fillRect(this.x, this.y, this.largura, this.altura);
+            }
+        },
+        bloco = {
+            x: 650, y: 200,
+            altura: 50,
+            largura: 50,
+            cor: "#ff4e4e",
+            desenha: function() {
+                this.x--;
+                
+                if(this.x<-50)
+                    this.x=650;
+                
                 ctx.fillStyle = this.cor;
                 ctx.fillRect(this.x, this.y, this.largura, this.altura);
             }
@@ -170,7 +182,8 @@
             
             chao.desenha();
             personagem.desenha();
-
+            bloco.desenha();
+            
             ctx.font = "20pt Tahoma";
             ctx.fillStyle = "#000";
             ctx.fillText("Pontuação:", 10, 35);
