@@ -24,15 +24,21 @@
     <script>
         //document.onkeydown = applyKey; 
         //Variaveis do jogo
-        var status,
+        var vida=30,
+        status,
         pontosJogador=0,
         velocidade=0,
-        
-        canvas, ctx, ALTURA, LARGURA, frames = 0,maxPulos=5,
+        canvas,
+        ctx, 
+        ALTURA, 
+        LARGURA, 
+        frames = 0,
+        maxPulos=5,
+        pausado=false,
 
         chao = {
-            y: 250,
-            altura: 50,
+            y: 270,
+            altura: 30,
             cor: "#ffdf70",
 
             desenha: function() {
@@ -42,12 +48,12 @@
         },
         personagem = {
             x: 50, y: 0,
-            altura: 50,
-            largura: 50,
+            altura: 35,
+            largura: 20,
             cor: "#ff4e4e",
-            gravidade: 1.5,
+            gravidade: 0.6,
             velocidade: 10,
-            forcaDoPulo: 20,
+            forcaDoPulo: 15,
             qntPulos: 0,
             andaFrente: function() {
                 if ( this.x <= (LARGURA - this.largura - 30) ) {
@@ -80,18 +86,28 @@
             }
         },
         bloco = {
-            x: 650, y: 200,
+            x: 650, y: 220,
             altura: 50,
             largura: 50,
             cor: "#ff4e4e",
             desenha: function() {
-                this.x--;
+                this.x -= 7;
                 
                 if(this.x<-50)
                     this.x=650;
                 
                 ctx.fillStyle = this.cor;
                 ctx.fillRect(this.x, this.y, this.largura, this.altura);
+            }
+        },
+        menu = {
+            desenha: function() {
+                ctx.fillStyle = "#50beff";
+                ctx.fillRect(0,0,LARGURA,ALTURA);
+                ctx.font = "20pt Tahoma";
+                ctx.fillStyle = "#000";
+                ctx.fillText("Jogo do Gato", 230, 95);
+                ctx.fillText("Para iniciar aperta enter!", 170, 150);
             }
         };
 
@@ -134,7 +150,15 @@
                 winObj.returnValue = false;
                 return false;
             }
-
+            if (intKeyCode == KEY_ENTER) {
+                if (pausado){
+                    pausado = false;
+                }else{
+                    pausado = true;
+                }
+                roda();
+                
+            }
         }
 
         function main() {
@@ -143,10 +167,9 @@
 
             // alert(LARGURA);
             if ( LARGURA >= 700 ) {
-                LARGURA = 600;
+                LARGURA = 700;
                 ALTURA = 300;
             }
-
             
             canvas = document.createElement("canvas");
             canvas.width = LARGURA;
@@ -158,13 +181,16 @@
             
             document.addEventListener("keydown", click);
 
-            roda();
+            menu.desenha();
+            
         }
         function roda() {
+            if(pausado){
             atualiza();
             desenha();
             
             window.requestAnimationFrame(roda);
+            }
         }
 
         function atualiza() {
@@ -188,6 +214,8 @@
             ctx.fillStyle = "#000";
             ctx.fillText("Pontuação:", 10, 35);
             ctx.fillText(pontosJogador, 10, 60);
+            ctx.fillText("Vida:", 500, 35);
+            ctx.fillText(vida, 500, 60);
         }
 
         //inicializa o jogo
