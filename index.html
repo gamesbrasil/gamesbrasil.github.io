@@ -18,42 +18,40 @@
 </head>
 
 <body>
-    <div class="row">
-        <p>teste</p>
-    </div>
     <script>
         //document.onkeydown = applyKey; 
         //Variaveis do jogo
-        var vida=30,
+        var vida=7,
         status,
         pontosJogador=0,
-        velocidade=0,
+        velocidade=3,
         canvas,
         ctx, 
         ALTURA, 
         LARGURA, 
         frames = 0,
-        maxPulos=5,
-        pausado=false,
+        maxPulos=1,
+        pausado=true,
 
         chao = {
-            y: 270,
+            y: 320,
             altura: 30,
             cor: "#ffdf70",
 
             desenha: function() {
                 ctx.fillStyle = this.cor;
                 ctx.fillRect(0, this.y, LARGURA, this.altura);
+                
             }
         },
         personagem = {
             x: 50, y: 0,
-            altura: 35,
-            largura: 20,
-            cor: "#ff4e4e",
+            altura: 15,
+            largura: 30,
+            cor: "#0c790f",
             gravidade: 0.6,
-            velocidade: 10,
-            forcaDoPulo: 15,
+            velocidade: 400,
+            forcaDoPulo: 16,
             qntPulos: 0,
             andaFrente: function() {
                 if ( this.x <= (LARGURA - this.largura - 30) ) {
@@ -86,15 +84,19 @@
             }
         },
         bloco = {
-            x: 650, y: 220,
+            x: 600, y: 100,
             altura: 50,
             largura: 50,
             cor: "#ff4e4e",
             desenha: function() {
-                this.x -= 7;
+                if (this.y < chao.y - this.altura) {
+                    this.y = chao.y - this.altura;
+                }
+
+                this.x -= velocidade;
                 
-                if(this.x<-50)
-                    this.x=650;
+                if(this.x<-80)
+                    this.x=750;
                 
                 ctx.fillStyle = this.cor;
                 ctx.fillRect(this.x, this.y, this.largura, this.altura);
@@ -108,6 +110,13 @@
                 ctx.fillStyle = "#000";
                 ctx.fillText("Jogo do Gato", 230, 95);
                 ctx.fillText("Para iniciar aperta enter!", 170, 150);
+            },
+            gameOver: function() {
+                pausado=true;
+                ctx.fillText("Fim de Jogo!", 250, 180);
+                ctx.fillText("Placar: ", 220, 210);
+                ctx.fillText(pontosJogador, 400, 210);
+                ctx.fillText("Para reiniciar aperte 'R'", 200, 250);
             }
         };
 
@@ -128,13 +137,18 @@
             var intAltKey = winObj.altKey;
             var intCtrlKey = winObj.ctrlKey;
             
-            if(intKeyCode == KEY_UP){
+            if(intKeyCode == KEY_UP || intKeyCode == KEY_SPACE){
                 personagem.pula();
+                // --- Map the keyCode in another keyCode not used 
+                winObj.keyCode = intKeyCode = REMAP_KEY_T;
+                winObj.returnValue = false;
+                return false;
             }
 
             if (intKeyCode == KEY_RIGHT ) {
 
-                personagem.andaFrente();
+                velocidade ++;
+                //personagem.andaFrente();
 
                 // --- Map the keyCode in another keyCode not used 
                 winObj.keyCode = intKeyCode = REMAP_KEY_T;
@@ -143,7 +157,8 @@
             }
             if (intKeyCode == KEY_LEFT ) {
 
-                personagem.andaTras();
+                velocidade --;
+                //personagem.andaTras();
 
                 // --- Map the keyCode in another keyCode not used 
                 winObj.keyCode = intKeyCode = REMAP_KEY_T;
@@ -153,11 +168,20 @@
             if (intKeyCode == KEY_ENTER) {
                 if (pausado){
                     pausado = false;
+                    return;
                 }else{
                     pausado = true;
-                }
-                roda();
-                
+                    return;
+                } 
+            }
+            if (intKeyCode == KEY_R) {
+                pausado=true;
+                vida=7,
+                pontosJogador=0,
+                velocidade=3,
+                frames = 0,
+                maxPulos=1,
+                main();
             }
         }
 
@@ -168,7 +192,7 @@
             // alert(LARGURA);
             if ( LARGURA >= 700 ) {
                 LARGURA = 700;
-                ALTURA = 300;
+                ALTURA = 350;
             }
             
             canvas = document.createElement("canvas");
@@ -182,15 +206,16 @@
             document.addEventListener("keydown", click);
 
             menu.desenha();
-            
+            roda();
         }
+        
         function roda() {
-            if(pausado){
-            atualiza();
-            desenha();
-            
-            window.requestAnimationFrame(roda);
+            if(!pausado){
+                atualiza();
+                desenha();
+                morre();
             }
+            window.requestAnimationFrame(roda);
         }
 
         function atualiza() {
@@ -198,17 +223,30 @@
             pontosJogador = frames;
 
             personagem.atualiza();
-            // Escreve placar
-            
         }
         
+        function morre() {
+            if (( (personagem.x + personagem.largura )  > (bloco.x )) && 
+                  (personagem.x                        < (bloco.x + bloco.largura )) &&
+                  (personagem.y + personagem.largura)   > (bloco.y ) && 
+                  (personagem.x                         < bloco.y + bloco.largura )
+                  )  {
+                vida--;
+                bloco.x = bloco.x - 130
+            }
+            if(vida<=0){
+                desenha();
+                menu.gameOver();
+            }
+        }
+
         function desenha() {
             ctx.fillStyle = "#50beff";
             ctx.fillRect(0,0,LARGURA,ALTURA);
             
             chao.desenha();
-            personagem.desenha();
             bloco.desenha();
+            personagem.desenha();
             
             ctx.font = "20pt Tahoma";
             ctx.fillStyle = "#000";
