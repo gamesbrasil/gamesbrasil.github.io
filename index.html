@@ -1,264 +1,28 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <meta charset="UTC-8" />
-    <title>Jogo</title>
-    <style>
-        canvas {
-            position: absolute;
-            top: 0px;
-            bottom: 0px;
-            left: 0px;
-            right: 0px;
-            margin: auto;
-        }
-    </style>
-    <SCRIPT LANGUAGE="JavaScript" SRC="keyboard.js"></SCRIPT> 
-</head>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Central de Jogos</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script language="JavaScript" src="menu.js"></script>
+    </head>
 
 <body>
+    <div class="menu" id="menu"></div>
     <script>
-        //document.onkeydown = applyKey; 
-        //Variaveis do jogo
-        var vida=7,
-        status,
-        pontosJogador=0,
-        velocidade=3,
-        canvas,
-        ctx, 
-        ALTURA, 
-        LARGURA, 
-        frames = 0,
-        maxPulos=1,
-        pausado=true,
-
-        chao = {
-            y: 320,
-            altura: 30,
-            cor: "#ffdf70",
-
-            desenha: function() {
-                ctx.fillStyle = this.cor;
-                ctx.fillRect(0, this.y, LARGURA, this.altura);
-                
-            }
-        },
-        personagem = {
-            x: 50, y: 0,
-            altura: 15,
-            largura: 30,
-            cor: "#0c790f",
-            gravidade: 0.6,
-            velocidade: 400,
-            forcaDoPulo: 16,
-            qntPulos: 0,
-            andaFrente: function() {
-                if ( this.x <= (LARGURA - this.largura - 30) ) {
-                    this.x = this.x + 5;
-                }
-            },
-            andaTras: function() {
-                if ( this.x >= 30 ) {
-                    this.x = this.x - 5;
-                }
-            },
-            atualiza: function() {
-                this.velocidade += this.gravidade;
-                this.y += this.velocidade;
-
-                if (this.y > chao.y - this.altura) {
-                    this.y = chao.y - this.altura;
-                    this.qntPulos = 0;
-                }
-            },
-            pula: function() {
-                if (this.qntPulos < maxPulos) {
-                    this.velocidade = -this.forcaDoPulo;
-                    this.qntPulos++;
-                }
-            },
-            desenha: function() {
-                ctx.fillStyle = this.cor;
-                ctx.fillRect(this.x, this.y, this.largura, this.altura);
-            }
-        },
-        bloco = {
-            x: 600, y: 100,
-            altura: 50,
-            largura: 50,
-            cor: "#ff4e4e",
-            desenha: function() {
-                if (this.y < chao.y - this.altura) {
-                    this.y = chao.y - this.altura;
-                }
-
-                this.x -= velocidade;
-                
-                if(this.x<-80)
-                    this.x=750;
-                
-                ctx.fillStyle = this.cor;
-                ctx.fillRect(this.x, this.y, this.largura, this.altura);
-            }
-        },
-        menu = {
-            desenha: function() {
-                ctx.fillStyle = "#50beff";
-                ctx.fillRect(0,0,LARGURA,ALTURA);
-                ctx.font = "20pt Tahoma";
-                ctx.fillStyle = "#000";
-                ctx.fillText("Jogo do Gato", 230, 95);
-                ctx.fillText("Para iniciar aperta enter!", 170, 150);
-            },
-            gameOver: function() {
-                pausado=true;
-                ctx.fillText("Fim de Jogo!", 250, 180);
-                ctx.fillText("Placar: ", 220, 210);
-                ctx.fillText(pontosJogador, 400, 210);
-                ctx.fillText("Para reiniciar aperte 'R'", 200, 250);
-            }
-        };
-
-        function checkEventObj(_event_) {
-            // --- IE explorer 
-            if (window.event)
-                return window.event;
-            // --- Netscape and other explorers 
-            else
-                return _event_;
-        }
-
-        function click(_event_) {
-            // --- Retrieve event object from current web explorer 
-            var winObj = checkEventObj(_event_);
-            
-            var intKeyCode = winObj.keyCode;
-            var intAltKey = winObj.altKey;
-            var intCtrlKey = winObj.ctrlKey;
-            
-            if(intKeyCode == KEY_UP || intKeyCode == KEY_SPACE){
-                personagem.pula();
-                // --- Map the keyCode in another keyCode not used 
-                winObj.keyCode = intKeyCode = REMAP_KEY_T;
-                winObj.returnValue = false;
-                return false;
-            }
-
-            if (intKeyCode == KEY_RIGHT ) {
-
-                velocidade ++;
-                //personagem.andaFrente();
-
-                // --- Map the keyCode in another keyCode not used 
-                winObj.keyCode = intKeyCode = REMAP_KEY_T;
-                winObj.returnValue = false;
-                return false;
-            }
-            if (intKeyCode == KEY_LEFT ) {
-
-                velocidade --;
-                //personagem.andaTras();
-
-                // --- Map the keyCode in another keyCode not used 
-                winObj.keyCode = intKeyCode = REMAP_KEY_T;
-                winObj.returnValue = false;
-                return false;
-            }
-            if (intKeyCode == KEY_ENTER) {
-                if (pausado){
-                    pausado = false;
-                    return;
-                }else{
-                    pausado = true;
-                    return;
-                } 
-            }
-            if (intKeyCode == KEY_R) {
-                pausado=true;
-                vida=7,
-                pontosJogador=0,
-                velocidade=3,
-                frames = 0,
-                maxPulos=1,
-                main();
-            }
-        }
-
-        function main() {
-            AUTURA = window.innerHeight;
-            LARGURA = window.innerWidth;
-
-            // alert(LARGURA);
-            if ( LARGURA >= 700 ) {
-                LARGURA = 700;
-                ALTURA = 350;
-            }
-            
-            canvas = document.createElement("canvas");
-            canvas.width = LARGURA;
-            canvas.height = ALTURA;
-            canvas.style.border = "1px solid #000";
-            
-            ctx = canvas.getContext("2d");
-            document.body.appendChild(canvas);
-            
-            document.addEventListener("keydown", click);
-
-            menu.desenha();
-            roda();
-        }
-        
-        function roda() {
-            if(!pausado){
-                atualiza();
-                desenha();
-                morre();
-            }
-            window.requestAnimationFrame(roda);
-        }
-
-        function atualiza() {
-            frames = frames +1;
-            pontosJogador = frames;
-
-            personagem.atualiza();
-        }
-        
-        function morre() {
-            if (( (personagem.x + personagem.largura )  > (bloco.x )) && 
-                  (personagem.x                        < (bloco.x + bloco.largura )) &&
-                  (personagem.y + personagem.largura)   > (bloco.y ) && 
-                  (personagem.x                         < bloco.y + bloco.largura )
-                  )  {
-                vida--;
-                bloco.x = bloco.x - 130
-            }
-            if(vida<=0){
-                desenha();
-                menu.gameOver();
-            }
-        }
-
-        function desenha() {
-            ctx.fillStyle = "#50beff";
-            ctx.fillRect(0,0,LARGURA,ALTURA);
-            
-            chao.desenha();
-            bloco.desenha();
-            personagem.desenha();
-            
-            ctx.font = "20pt Tahoma";
-            ctx.fillStyle = "#000";
-            ctx.fillText("Pontuação:", 10, 35);
-            ctx.fillText(pontosJogador, 10, 60);
-            ctx.fillText("Vida:", 500, 35);
-            ctx.fillText(vida, 500, 60);
-        }
-
-        //inicializa o jogo
-        main();
+        $('#menu').append(menuGeral);
     </script>
+
+    <div>
+        <h2>Central de jogos</h2>
+    </div>
+    
+    <div class="footer" id="footer"></div>
+    <script>
+        $('#footer').append(footer);
+    </script>
+    
 </body>
 
 </html>
