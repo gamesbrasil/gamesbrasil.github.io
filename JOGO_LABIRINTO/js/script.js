@@ -90,7 +90,7 @@
 			if(maze[linha+1][coluna]===10){
 				maze[linha][coluna] = 0;
 				maze[linha+1][coluna] = 2;
-				alert("s,dmvbsdg");
+				alert("Parabéns, conseguiu achar a saida, em breve teremos mais níveis.");
 			}
 		}
 		mvLeft = false;
