@@ -46,7 +46,7 @@
             chao = {
                 y: 320,
                 altura: 30,
-                // cor: "#ffdf70",
+                cor: "#ffdf70",
 
                 desenha: function() {
                     ctx.fillStyle = this.cor;
@@ -59,7 +59,7 @@
                 x: 50, y: 0,
                 altura: 100,
                 largura: 150,
-                //cor: "#0c790f",
+                cor: "#0c790f",
                 gravidade: 0.6,
                 velocidade: 400,
                 forcaDoPulo: 16,
@@ -98,7 +98,7 @@
                 x: 600, y: 100,
                 altura: 50,
                 largura: 50,
-                // cor: "#ff4e4e",
+                cor: "#ff4e4e",
                 desenha: function() {
                     if (this.y < chao.y - this.altura) {
                         this.y = chao.y - this.altura;
@@ -252,19 +252,19 @@
             }
 
             function desenha() {
-                // ctx.fillStyle = "#50beff";
+                ctx.fillStyle = "#50beff";
                 ctx.fillRect(0,0,LARGURA,ALTURA);
                 
-                // chao.desenha();
-                // bloco.desenha();
+                chao.desenha();
+                bloco.desenha();
                 personagem.desenha();
                 
-                // ctx.font = "20pt Tahoma";
-                // ctx.fillStyle = "#000";
-                // ctx.fillText("Pontuação:", 10, 35);
-                // ctx.fillText(pontosJogador, 10, 60);
-                // ctx.fillText("Vida:", 500, 35);
-                // ctx.fillText(vida, 500, 60);
+                ctx.font = "20pt Tahoma";
+                ctx.fillStyle = "#000";
+                ctx.fillText("Pontuação:", 10, 35);
+                ctx.fillText(pontosJogador, 10, 60);
+                ctx.fillText("Vida:", 500, 35);
+                ctx.fillText(vida, 500, 60);
             }
 
             //inicializa o jogo
