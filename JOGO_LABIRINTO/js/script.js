@@ -29,14 +29,16 @@
 		}
 	};
 
+	var faseAtual = 0;
 	//mapa do labirinto
-	var maze = [
+	var fase_0 = [
 		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 		[1,2,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,1],
 		[1,1,1,0,1,1,1,0,0,1,0,0,0,1,0,0,0,0,0,1,1],
 		[1,0,0,0,0,0,1,10,1,1,1,1,1,1,0,1,1,1,1,1,1],
 		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 	];
+	var maze = fase_0;
 	function procuraPosicao(){
 		for(var row in maze){
 			for(var column in maze[row]){
@@ -46,6 +48,45 @@
 				}
 			}
 		}
+	}
+	// carrega a proxima fase do jogo
+	function proximaFase(fase){
+		switch(faseAtual){
+			case 0:
+				maze = fase_1;
+				break;
+			case 1:
+				maze = fase_2;
+				break;
+			case 2:
+				maze = fase_3;
+				break;
+			case 3:
+				maze = fase_4;
+				break;
+			case 4:
+				maze = fase_5;
+				break;
+			case 5:
+				maze = fase_6;
+				break;
+			case 6:
+				maze = fase_7;
+				break;
+			case 7:
+				maze = fase_8;
+				break;
+			case 8:
+				maze = fase_9;
+				break;
+			case 9:
+				maze = fase_10;
+				break;
+			case 10:
+				maze = fase_0;
+				break;
+		}
+		faseAtual++;
 	}
 	//atualização cíclica do programa
 	function update(){
@@ -91,6 +132,8 @@
 				maze[linha][coluna] = 0;
 				maze[linha+1][coluna] = 2;
 				alert("Parabéns, conseguiu achar a saida, em breve teremos mais níveis.");
+				
+				proximaFase(faseAtual);
 			}
 		}
 		mvLeft = false;
