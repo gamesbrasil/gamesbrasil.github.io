@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pt-br" lang="pt-br">
+
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta name="generator" content="Geany 1.27" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script language="JavaScript" src="../menu.js"></script>
+    <style>body {overflow: no;}#scroll{
+        display:block;
+        color:#FF0000;
+        padding:0px;
+        margin-left: 22px;
+        width:865px;
+        height:152px;
+        white-space: nowrap;
+        overflow: scroll;
+        }</style>
+</head>
+
+<body>
+    <div class="menu" id="menu"></div>
+    <script>
+        $('#menu').append(menuGeral);
+    </script>
+
+    <canvas class="fixed" width="600" height="600" style="border: solid;">
+        <script>
+
+            // Mapeamento do teclado
+            var LEFT = 37, UP = 38, RIGTH = 39, DOWN = 40;
+            // Lendo movimentação
+            var mvLeft = mvRigth = mvUp = mvDown = false;
+
+            // canvas
+            var cnv = document.querySelector("canvas");
+            var ctx = cnv.getContext("2d");
+
+            personagem = {
+                x: 50,
+                y: 50,
+                altura: 50,
+                largura: 50,
+                cor: '#00f',
+                desenha: function () {
+                    ctx.fillStyle = this.cor;
+                    ctx.fillRect(this.x, this.y, this.largura, this.altura);
+                }
+            }
+
+            blocoMudaCor = {
+                largura: 50,
+                altura: 50,
+                x: cnv.width / 2 - 25,
+                y: cnv.height / 2 - 25,
+                cor: '#000',
+                desenha: function () {
+                    ctx.fillStyle = this.cor;
+                    ctx.fillRect(this.x, this.y, this.largura, this.altura);
+                }
+            }
+
+            function colisao(){
+                if( personagem.x + personagem.largura > blocoMudaCor.x &&
+                    personagem.x < blocoMudaCor.x + blocoMudaCor.largura &&
+                    personagem.y + personagem.altura > blocoMudaCor.y &&
+                    personagem.y < blocoMudaCor.y + blocoMudaCor.altura){
+                    personagem.cor = '#0f0';
+                }else{
+                    personagem.cor = '#00f';
+
+                }
+            }
+
+            window.addEventListener("keydown", keyDownHandler, false);
+            window.addEventListener("keyup", keyUpHandler, false);
+
+            function keyDownHandler(e) {
+                switch (e.keyCode) {
+                    case UP:
+                        mvUp = true;
+                        break;
+                    case DOWN:
+                        mvDown = true;
+                        break;
+                    case LEFT:
+                        mvLeft = true;
+                        break;
+                    case RIGTH:
+                        mvRigth = true;
+                        break;
+                }
+            }
+            function keyUpHandler(e) {
+                switch (e.keyCode) {
+                    case UP:
+                        mvUp = false;
+                        break;
+                    case DOWN:
+                        mvDown = false;
+                        break;
+                    case LEFT:
+                        mvLeft = false;
+                    case RIGTH:
+                        mvRigth = false;
+                        break
+                }
+            }
+
+            function updadePersonagem(){
+                if(mvLeft){
+                    personagem.x--;
+                }
+                if(mvRigth){
+                    personagem.x++;
+                }
+                if(mvUp){
+                    personagem.y--;
+                }
+                if(mvDown){
+                    personagem.y++;
+                }
+            }
+            function update() {
+                updadePersonagem();
+            }
+
+            function desenha() {
+                ctx.clearRect(0,0,cnv.width,cnv.height);
+                blocoMudaCor.desenha();
+                personagem.desenha();
+                colisao();
+            }
+            function loop() {
+                window.requestAnimationFrame(loop, cnv);
+                update();
+                desenha();
+            }
+            loop();
+        </script>
+</body>
+
+</html>
