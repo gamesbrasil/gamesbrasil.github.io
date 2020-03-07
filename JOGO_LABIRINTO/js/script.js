@@ -144,6 +144,7 @@
 	
 	//renderização (desenha na tela)
 	function render(){
+		ctx.clearRect(0,0,cnv.width,cnv.height);
 		//procedimento que varre as linhas e colunas do labirinto
 		for(var row in maze){
 			for(var column in maze[row]){
