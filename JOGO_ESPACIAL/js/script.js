@@ -33,6 +33,50 @@
 	window.addEventListener("keydown", keyDownHandler, false);
 	window.addEventListener("keyup", keyUpHandler, false);
 
+	function getCursorPosition(canvas, event) {
+		const rect = canvas.getBoundingClientRect()
+		const x = event.clientX - rect.left
+		const y = event.clientY - rect.top
+		console.log("x: " + x + " y: " + y)
+
+		if (x > seta_esquerda.x &&
+			x < seta_esquerda.x + seta_esquerda.largura &&
+			y > seta_esquerda.y &&
+			y < seta_esquerda.y + seta_esquerda.altura) {
+			mvLeft = true;
+		}
+		if (x > seta_direita.x &&
+			x < seta_direita.x + seta_direita.largura &&
+			y > seta_direita.y &&
+			y < seta_direita.y + seta_direita.altura) {
+			mvRigth = true;
+		}
+		if (x > btn_atirar.x &&
+			x < btn_atirar.x + btn_atirar.largura &&
+			y > btn_atirar.y &&
+			y < btn_atirar.y + btn_atirar.altura) {
+			atirar = true;
+		}
+	}
+	function getCursorPositionDisabled(canvas, event) {
+		mvLeft = false;
+		mvRigth = false;
+		atirar = false;
+	}
+
+	// x: 533 y: 285
+	// x: 579 y: 285
+	// x: 582 y: 327
+	// x: 532 y: 329
+
+
+	window.addEventListener('mousedown', function (e) {
+		getCursorPosition(cnv, e)
+	})
+	window.addEventListener('mouseup', function (e) {
+		getCursorPositionDisabled(cnv, e)
+	})
+
 	function keyDownHandler(e) {
 
 		switch (e.keyCode) {
@@ -105,7 +149,7 @@
 	}
 	function atirarando() {
 		if (atirar) {
-			var tiro = new Sprite(char.posX + char.largura / 2, char.posY, 5, 5,img_tiro);
+			var tiro = new Sprite(char.posX + char.largura / 2, char.posY, 5, 5, img_tiro);
 			tiro.tiro = true;
 			sprites.push(tiro);
 
@@ -116,7 +160,7 @@
 	}
 	function adicionandoInimigos() {
 		// inimigo
-		var inimigo = new Sprite(myRandom(50, 550, 1), -50, 50, 50,img_inimigo);
+		var inimigo = new Sprite(myRandom(50, 550, 1), -50, 50, 50, img_inimigo);
 		inimigo.inimigo = true;
 		sprites.push(inimigo);
 	}
@@ -129,7 +173,7 @@
 
 	}
 
-	function fimDeJogo(){
+	function fimDeJogo() {
 		alert("vc perdeu, agora tem que reiniciar todas as veriaveis");
 		char.vida = 5;
 		char.pontosJogador = 0;
@@ -173,21 +217,21 @@
 							ini.posY + ini.altura > spr.posY &&
 							ini.posY < spr.posY + spr.altura) {
 							char.vida--;
-							for(var k in sprites){
-								if(k==0){
+							for (var k in sprites) {
+								if (k == 0) {
 									continue;
 								}
 								delete sprites[k];
 							}
-							if(char.vida == 0){
+							if (char.vida == 0) {
 								fimDeJogo();
 							}
-								// alert("fim de jogo, aqui colocar o fim do jogos");
+							// alert("fim de jogo, aqui colocar o fim do jogos");
 						}
 					}
 					// ctx.fillStyle = spr.cor;
 					// if(char.persona){
-						spr.desenhar(ctx);
+					spr.desenhar(ctx);
 					// }else{
 					// 	ctx.fillRect(spr.posX, spr.posY, spr.largura, spr.altura);
 					// }
@@ -207,7 +251,37 @@
 		ctx.fillText(char.pontosJogador, 10, 60);
 		ctx.fillText("Vida:", 500, 35);
 		ctx.fillText(char.vida, 500, 60);
+
+		//desenhado setas
+		ctx.fillStyle = '#f00';
+		//seta esquerda
+		ctx.fillStyle = "#f00";
+		ctx.fillRect(seta_esquerda.x, seta_esquerda.y, seta_esquerda.largura, seta_esquerda.altura);
+		//seta direita
+		ctx.fillStyle = "#0f0";
+		ctx.fillRect(seta_direita.x, seta_direita.y, seta_direita.largura, seta_direita.altura);
+		//seta atirar
+		ctx.fillStyle = "#00f";
+		ctx.fillRect(btn_atirar.x, btn_atirar.y, btn_atirar.largura, btn_atirar.altura);
 	}
+	var seta_esquerda = [];
+	seta_esquerda.altura = 50;
+	seta_esquerda.largura = 50;
+	seta_esquerda.x = 20;
+	seta_esquerda.y = cnv.height - seta_esquerda.x - seta_esquerda.altura;
+
+	var seta_direita = [];
+	seta_direita.altura = 50;
+	seta_direita.largura = 50;
+	seta_direita.x = seta_esquerda.largura + seta_esquerda.x + seta_esquerda.x;
+	seta_direita.y = cnv.height - seta_direita.altura - seta_esquerda.x;
+
+	var btn_atirar = [];
+	btn_atirar.altura = 50;
+	btn_atirar.largura = 50;
+	btn_atirar.x = cnv.width - btn_atirar.altura - seta_esquerda.x;
+	btn_atirar.y = cnv.height - btn_atirar.altura - seta_esquerda.x;
+
 	function loop() {
 		window.requestAnimationFrame(loop, cnv);
 		update();
