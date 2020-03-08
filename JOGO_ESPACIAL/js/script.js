@@ -71,10 +71,11 @@
 
 
 	window.addEventListener('touchstart', function (e) {
-		getCursorPosition(cnv, e)
+		// this.console.log(e.changedTouches[0]);
+		getCursorPosition(cnv, e.changedTouches[0])
 	})
 	window.addEventListener('touchend', function (e) {
-		getCursorPositionDisabled(cnv, e)
+		getCursorPositionDisabled(cnv, e.changedTouches[0])
 	})
 
 	function keyDownHandler(e) {
