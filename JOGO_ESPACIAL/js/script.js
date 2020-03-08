@@ -15,6 +15,8 @@
 	// personagem
 	var char = new Sprite(cnv.width / 2 - 25, cnv.height - 100, 50, 50, '#00f');
 	char.speed = 5;
+	char.pontosJogador = 0;
+	char.vida = 5;
 	sprites.push(char);
 
 
@@ -104,17 +106,24 @@
 	}
 	function adicionandoInimigos() {
 		// inimigo
-		var inimigo = new Sprite(Math.floor(Math.random() * 550), -50, 50, 50, '#2e3');
+		var inimigo = new Sprite(myRandom(50, 550, 1), -50, 50, 50, '#2e3');
 		inimigo.inimigo = true;
 		sprites.push(inimigo);
 	}
-	setInterval(adicionandoInimigos, myRandom(2000,5000,1));
+	// adiciona inimigos a cada 2 a 5 segundos
+	setInterval(adicionandoInimigos, myRandom(100, 500, 1));
+
 	function update() {
 		atirarando();
 		atualizaPosicaoPersonagem();
-		
+
 	}
 
+	function fimDeJogo(){
+		alert("vc perdeu, agora tem que reiniciar todas as veriaveis");
+		char.vida = 5;
+		char.pontosJogador = 0;
+	}
 	function desenha() {
 		ctx.clearRect(0, 0, cnv.width, cnv.height);
 		// blocoMudaCor.desenha();
@@ -134,28 +143,56 @@
 						ini.posX < spr.posX + spr.largura &&
 						ini.posY + ini.altura > spr.posY &&
 						ini.posY < spr.posY + spr.altura) {
-							delete sprites[j];
+						delete sprites[j];
+						delete sprites[i];
+						char.pontosJogador++;
 					}
 				}
 			}
 			if (spr.visible) {
-				if(spr.inimigo){
+				if (spr.inimigo) {
 					spr.posY += 1;
 					ctx.fillStyle = spr.cor;
 					ctx.fillRect(spr.posX, spr.posY, spr.largura, spr.altura);
-				}else{
+				} else {
+					for (var j in sprites) {
+						var ini = sprites[j];
+						if (ini.inimigo &&
+							ini.posX + ini.largura > spr.posX &&
+							ini.posX < spr.posX + spr.largura &&
+							ini.posY + ini.altura > spr.posY &&
+							ini.posY < spr.posY + spr.altura) {
+							char.vida--;
+							for(var k in sprites){
+								if(k==0){
+									continue;
+								}
+								delete sprites[k];
+							}
+							if(char.vida == 0){
+								fimDeJogo();
+							}
+								// alert("fim de jogo, aqui colocar o fim do jogos");
+						}
+					}
 					ctx.fillStyle = spr.cor;
 					ctx.fillRect(spr.posX, spr.posY, spr.largura, spr.altura);
 				}
 			}
 
-			if(spr.posY > cnv.height){
+			if (spr.posY > cnv.height) {
 				delete sprites[i];
 			}
-			if(spr.posY < 0-spr.altura){
+			if (spr.posY < 0 - spr.altura) {
 				delete sprites[i];
 			}
 		}
+		ctx.font = "20pt Tahoma";
+		ctx.fillStyle = "#000";
+		ctx.fillText("Pontuação:", 10, 35);
+		ctx.fillText(char.pontosJogador, 10, 60);
+		ctx.fillText("Vida:", 500, 35);
+		ctx.fillText(char.vida, 500, 60);
 	}
 	function loop() {
 		window.requestAnimationFrame(loop, cnv);
