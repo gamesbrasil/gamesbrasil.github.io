@@ -59,9 +59,29 @@
 		}
 	}
 	function getCursorPositionDisabled(canvas, event) {
-		mvLeft = false;
-		mvRigth = false;
-		atirar = false;
+		const rect = canvas.getBoundingClientRect()
+		const x = event.clientX - rect.left
+		const y = event.clientY - rect.top
+		// console.log("x: " + x + " y: " + y)
+
+		if (x > seta_esquerda.x &&
+			x < seta_esquerda.x + seta_esquerda.largura &&
+			y > seta_esquerda.y &&
+			y < seta_esquerda.y + seta_esquerda.altura) {
+			mvLeft = false;
+		}
+		if (x > seta_direita.x &&
+			x < seta_direita.x + seta_direita.largura &&
+			y > seta_direita.y &&
+			y < seta_direita.y + seta_direita.altura) {
+			mvRigth = false;
+		}
+		if (x > btn_atirar.x &&
+			x < btn_atirar.x + btn_atirar.largura &&
+			y > btn_atirar.y &&
+			y < btn_atirar.y + btn_atirar.altura) {
+			atirar = false;
+		}
 	}
 
 	// x: 533 y: 285
