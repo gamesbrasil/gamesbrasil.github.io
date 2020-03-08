@@ -37,7 +37,7 @@
 		const rect = canvas.getBoundingClientRect()
 		const x = event.clientX - rect.left
 		const y = event.clientY - rect.top
-		console.log("x: " + x + " y: " + y)
+		// console.log("x: " + x + " y: " + y)
 
 		if (x > seta_esquerda.x &&
 			x < seta_esquerda.x + seta_esquerda.largura &&
