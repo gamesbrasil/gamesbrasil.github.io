@@ -12,11 +12,21 @@
 	// sprites
 	var sprites = [];
 
+	var img_char = new Image();
+	img_char.src = "img/nave_semfundo1.png";
+
+	var img_tiro = new Image();
+	img_tiro.src = "img/nave_semfundo1.png";
+
+	var img_inimigo = new Image();
+	img_inimigo.src = "img/inimigo.png";
+
 	// personagem
-	var char = new Sprite(cnv.width / 2 - 25, cnv.height - 100, 50, 50, '#00f');
+	var char = new Sprite(cnv.width / 2 - 25, cnv.height - 100, 50, 50, img_char);
 	char.speed = 5;
 	char.pontosJogador = 0;
 	char.vida = 5;
+	char.persona = true;
 	sprites.push(char);
 
 
@@ -95,7 +105,7 @@
 	}
 	function atirarando() {
 		if (atirar) {
-			var tiro = new Sprite(char.posX + char.largura / 2, char.posY, 5, 5, "#f00");
+			var tiro = new Sprite(char.posX + char.largura / 2, char.posY, 5, 5,img_tiro);
 			tiro.tiro = true;
 			sprites.push(tiro);
 
@@ -106,7 +116,7 @@
 	}
 	function adicionandoInimigos() {
 		// inimigo
-		var inimigo = new Sprite(myRandom(50, 550, 1), -50, 50, 50, '#2e3');
+		var inimigo = new Sprite(myRandom(50, 550, 1), -50, 50, 50,img_inimigo);
 		inimigo.inimigo = true;
 		sprites.push(inimigo);
 	}
@@ -133,8 +143,8 @@
 			var spr = sprites[i];
 			if (spr.tiro) {
 				spr.posY -= 2;
-				ctx.fillStyle = spr.cor;
-				ctx.fillRect(spr.posX, spr.posY, spr.largura, spr.altura);
+				// ctx.fillStyle = spr.cor;
+				spr.desenhar(ctx);
 				// colisao
 				for (var j in sprites) {
 					var ini = sprites[j];
@@ -152,8 +162,8 @@
 			if (spr.visible) {
 				if (spr.inimigo) {
 					spr.posY += 1;
-					ctx.fillStyle = spr.cor;
-					ctx.fillRect(spr.posX, spr.posY, spr.largura, spr.altura);
+					// ctx.fillStyle = spr.cor;
+					spr.desenhar(ctx);
 				} else {
 					for (var j in sprites) {
 						var ini = sprites[j];
@@ -175,8 +185,12 @@
 								// alert("fim de jogo, aqui colocar o fim do jogos");
 						}
 					}
-					ctx.fillStyle = spr.cor;
-					ctx.fillRect(spr.posX, spr.posY, spr.largura, spr.altura);
+					// ctx.fillStyle = spr.cor;
+					// if(char.persona){
+						spr.desenhar(ctx);
+					// }else{
+					// 	ctx.fillRect(spr.posX, spr.posY, spr.largura, spr.altura);
+					// }
 				}
 			}
 
