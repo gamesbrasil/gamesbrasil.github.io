@@ -70,10 +70,10 @@
 	// x: 532 y: 329
 
 
-	window.addEventListener('mousedown', function (e) {
+	window.addEventListener('touchstart', function (e) {
 		getCursorPosition(cnv, e)
 	})
-	window.addEventListener('mouseup', function (e) {
+	window.addEventListener('touchend', function (e) {
 		getCursorPositionDisabled(cnv, e)
 	})
 
