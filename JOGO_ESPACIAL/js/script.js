@@ -183,10 +183,11 @@
 		// inimigo
 		var inimigo = new Sprite(myRandom(50, 550, 1), -50, 50, 50, img_inimigo);
 		inimigo.inimigo = true;
+		inimigo.vidaI = 15;
 		sprites.push(inimigo);
 	}
-	// adiciona inimigos a cada 2 a 5 segundos
-	setInterval(adicionandoInimigos, myRandom(100, 500, 1));
+	// adiciona inimigos a cada 0,5 a 5 segundos
+	setInterval(adicionandoInimigos, myRandom(50, 500, 1));
 
 	function update() {
 		atirarando();
@@ -206,6 +207,16 @@
 		// colisao();
 		for (var i in sprites) {
 			var spr = sprites[i];
+
+			// retira sprite se estiver fora do mapa
+			if (spr.posY > cnv.height) {
+				delete sprites[i];
+			}
+			// retira sprite se estiver fora do mapa
+			if (spr.posY < 0 - spr.altura) {
+				delete sprites[i];
+			}
+
 			if (spr.tiro) {
 				spr.posY -= 2;
 				// ctx.fillStyle = spr.cor;
@@ -218,11 +229,16 @@
 						ini.posX < spr.posX + spr.largura &&
 						ini.posY + ini.altura > spr.posY &&
 						ini.posY < spr.posY + spr.altura) {
-						delete sprites[j];
+							ini.vidaI--;
+							if(ini.vidaI < 0){
+								delete sprites[j];
+								char.pontosJogador++;
+								}
 						delete sprites[i];
-						char.pontosJogador++;
+						break;
 					}
 				}
+				continue;
 			}
 			if (spr.visible) {
 				if (spr.inimigo) {
@@ -259,12 +275,7 @@
 				}
 			}
 
-			if (spr.posY > cnv.height) {
-				delete sprites[i];
-			}
-			if (spr.posY < 0 - spr.altura) {
-				delete sprites[i];
-			}
+
 		}
 		ctx.font = "20pt Tahoma";
 		ctx.fillStyle = "#000";
