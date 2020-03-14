@@ -9,6 +9,18 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script language="JavaScript" src="../menu.js"></script>
 	<script language="JavaScript" src="js/fases.js"></script>
+	<style>
+
+	#meuCanvas {
+		display: block;
+		width: 100%;
+		Height: 100%;
+		border: 1px solid #c33;
+		position: fixed; /*ou position: absolute;*/
+		 top: 0;
+		 left: 0;
+	}
+	</style>
 </head>
 
 <body>
@@ -18,7 +30,7 @@
 			<script>
 				$('#menu').append(menuGeral);
 			</script>
-			<canvas width="600" height="350" style="border: solid;">
+			<canvas width="600" height="350" id="meuCanvas" style="border: solid;">
 				<script src="js/sprites.js"></script>
 				<script src="js/script.js"></script>
 		</div>
