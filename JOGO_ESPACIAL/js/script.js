@@ -27,6 +27,7 @@
 	char.pontosJogador = 0;
 	char.vida = 5;
 	char.persona = true;
+	char.tipoTiro = 0;
 	sprites.push(char);
 
 
@@ -93,10 +94,10 @@
 	window.addEventListener('touchstart', function (e) {
 		// this.console.log(e.changedTouches[0]);
 		getCursorPosition(cnv, e.changedTouches[0])
-	},false)
+	}, false)
 	window.addEventListener('touchend', function (e) {
 		getCursorPositionDisabled(cnv, e.changedTouches[0])
-	},false)
+	}, false)
 
 	function keyDownHandler(e) {
 
@@ -170,9 +171,42 @@
 	}
 	function atirarando() {
 		if (atirar) {
-			var tiro = new Sprite(char.posX + char.largura / 2, char.posY, 5, 5, img_tiro);
-			tiro.tiro = true;
-			sprites.push(tiro);
+			switch (char.tipoTiro) {
+				case 0:
+					var tiro = new Sprite(char.posX + char.largura / 2-2, char.posY, 5, 5, img_tiro);
+					tiro.tiro = true;
+					sprites.push(tiro);
+					break;
+				case 1:
+					var tiro = new Sprite(char.posX+4, char.posY+15, 5, 5, img_tiro);
+					tiro.tiro = true;
+					sprites.push(tiro);
+					var tiro = new Sprite(char.posX + char.largura-8, char.posY+15, 5, 5, img_tiro);
+					tiro.tiro = true;
+					sprites.push(tiro);
+					break;
+				default:
+					var tiro = new Sprite(char.posX + char.largura / 2-2, char.posY, 5, 5, img_tiro);
+					tiro.tiro = true;
+					sprites.push(tiro);
+					var tiro = new Sprite(char.posX+4, char.posY+15, 5, 5, img_tiro);
+					tiro.tiro = true;
+					sprites.push(tiro);
+					var tiro = new Sprite(char.posX + char.largura-8, char.posY+15, 5, 5, img_tiro);
+					tiro.tiro = true;
+					sprites.push(tiro);
+					char.tipoTiro=2;
+					break;
+				// default:
+				// 	var tiro = new Sprite(char.posX, char.posY, 5, 5, img_tiro);
+				// 	tiro.tiro = true;
+				// 	sprites.push(tiro);
+				// 	var tiro = new Sprite(char.posX + char.largura - 5, char.posY, 5, 5, img_tiro);
+				// 	tiro.tiro = true;
+				// 	sprites.push(tiro);
+				// 	break;
+
+			}
 
 		}
 	}
@@ -189,16 +223,42 @@
 	// adiciona inimigos a cada 0,5 a 5 segundos
 	setInterval(adicionandoInimigos, myRandom(50, 500, 1));
 
+	function armamento(){
+		if(char.pontosJogador%50===0 && char.pontosJogador!=0){
+			char.tipoTiro++;
+			// var armamento = new Sprite(char.posX + char.largura - 5, char.posY, 500, 500, img_char);
+			// armamento.arma = true;
+			// sprites.push(armamento);
+		}
+	}
 	function update() {
 		atirarando();
 		atualizaPosicaoPersonagem();
+		
 
 	}
 
 	function fimDeJogo() {
 		alert("vc perdeu, agora tem que reiniciar todas as veriaveis");
 		char.vida = 5;
+		char.tipoTiro = 0;
 		char.pontosJogador = 0;
+	}
+	function perdeVida(){
+		if(char.tipoTiro > 0){
+			char.tipoTiro--;
+		}
+		char.vida--;
+		for (var k in sprites) {
+			if (k == 0) {
+				continue;
+			}
+			delete sprites[k];
+		}
+		if (char.vida == 0) {
+			fimDeJogo();
+		}
+		// alert("fim de jogo, aqui colocar o fim do jogos");
 	}
 	function desenha() {
 		ctx.clearRect(0, 0, cnv.width, cnv.height);
@@ -230,16 +290,17 @@
 						ini.posY + ini.altura > spr.posY &&
 						ini.posY < spr.posY + spr.altura) {
 							ini.vidaI--;
-							if(ini.vidaI < 0){
+							if (ini.vidaI < 0) {
 								delete sprites[j];
 								char.pontosJogador++;
-								}
-						delete sprites[i];
-						break;
+								armamento();
+							}
+							delete sprites[i];
+							break;
+						}
 					}
+					continue;
 				}
-				continue;
-			}
 			if (spr.visible) {
 				if (spr.inimigo) {
 					spr.posY += 1;
@@ -253,17 +314,8 @@
 							ini.posX < spr.posX + spr.largura &&
 							ini.posY + ini.altura > spr.posY &&
 							ini.posY < spr.posY + spr.altura) {
-							char.vida--;
-							for (var k in sprites) {
-								if (k == 0) {
-									continue;
-								}
-								delete sprites[k];
-							}
-							if (char.vida == 0) {
-								fimDeJogo();
-							}
-							// alert("fim de jogo, aqui colocar o fim do jogos");
+								perdeVida();
+								
 						}
 					}
 					// ctx.fillStyle = spr.cor;
@@ -281,6 +333,8 @@
 		ctx.fillStyle = "#000";
 		ctx.fillText("Pontuação:", 10, 35);
 		ctx.fillText(char.pontosJogador, 10, 60);
+		ctx.fillText("Tiro:", 155, 35);
+		ctx.fillText(char.tipoTiro, 155, 60);
 		ctx.fillText("Vida:", 500, 35);
 		ctx.fillText(char.vida, 500, 60);
 
