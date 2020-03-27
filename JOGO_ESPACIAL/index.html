@@ -10,18 +10,25 @@
 	<script language="JavaScript" src="../menu.js"></script>
 	<script language="JavaScript" src="js/fases.js"></script>
 	<style>
+		#meuCanvas {
+			display: block;
+			width: 100%;
+			Height: 100%;
+			border: 1px solid #c33;
+			position: fixed;
+			/*ou position: absolute;*/
+			top: 0;
+			left: 0;
+			display: fullscreen;
+			orientation: landscape
+		}
 
-	#meuCanvas {
-		display: block;
-		width: 100%;
-		Height: 100%;
-		border: 1px solid #c33;
-		position: fixed; /*ou position: absolute;*/
-		top: 0;
-		left: 0;
-		display: fullscreen;
-		orientation: landscape
-	}
+		body {
+			background-image: url('img/background1.png');
+			background-repeat: no-repeat;
+			background-attachment: fixed;
+			background-size: cover;
+		}
 	</style>
 </head>
 

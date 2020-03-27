@@ -19,7 +19,7 @@
 	img_tiro.src = "img/nave_semfundo1.png";
 
 	var img_inimigo = new Image();
-	img_inimigo.src = "img/inimigo.png";
+	img_inimigo.src = "img/inimigo1.png";
 
 	// personagem
 	var char = new Sprite(cnv.width / 2 - 25, cnv.height - 100, 50, 50, img_char);
